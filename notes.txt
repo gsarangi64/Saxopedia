@@ -1,0 +1,9 @@
+- cd into folder where you want file to be
+- git clone https://github.com/gsarangi64/Saxopedia.git
+- git pull origin main
+- do edits
+- git status(should show changed or added files)
+- git add . or git add (filename)
+- git push
+- git commit -m "message"
+- git push origin main
