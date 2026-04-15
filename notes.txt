@@ -7,3 +7,16 @@
 - git push
 - git commit -m "message"
 - git push origin main
+
+
+planning:
+user auth:
+    - users on the website, have user data such as programs, rep studied list
+db:
+    - rep studied
+    - programs
+front end
+    - display based on filter with js
+json parsing:
+    - sax rep api
+    - composer api
