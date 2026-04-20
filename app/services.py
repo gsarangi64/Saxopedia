@@ -6,7 +6,8 @@ from urllib.parse import quote
 # Cnfig
 
 REPERTOIRE_URL = "https://raw.githubusercontent.com/gsarangi64/sax-repertoire-data/main/sax_repertoire.json"
-OPENOPUS_BASE_URL = "https://api.openopus.org/composer/list/search/"
+# OPENOPUS_BASE_URL = "https://api.openopus.org/composer/list/search/"
+OPENOPUS_BASE_URL = "https://api.openopus.org"
 
 CACHE_DURATION = 300  # seconds (5 minutes)
 
@@ -49,22 +50,22 @@ def load_repertoire():
 
 def fetch_composer(name):
     cleaned_name = quote(name)
-    url = f"{OPENOPUS_BASE_URL}{cleaned_name}.json"
+    url = f"{OPENOPUS_BASE_URL}/composer/list/search/{cleaned_name}.json"
 
     print(f"Fetching composer from: {url}")
 
     try:
         response = requests.get(url, timeout=5)
 
-        # Check for bad status (like 504)
         if response.status_code != 200:
             print(f"API error: {response.status_code}")
             return None
 
         data = response.json()
 
-        if data.get("status", {}).get("success") == "true" and data.get("composers"):
-            return data["composers"][0]
+        if data.get("status", {}).get("success") == "true":
+            composers = data.get("composers", [])
+            return composers[0] if composers else None
 
         return None
 
@@ -80,18 +81,27 @@ def fetch_composer(name):
 
 def search_composers(name):
     cleaned_name = quote(name)
-    url = f"{OPENOPUS_BASE_URL}{cleaned_name}.json"
+    url = f"{OPENOPUS_BASE_URL}/composer/list/search/{cleaned_name}.json"
 
     print(f"Searching composers from: {url}")
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
+
+        if response.status_code != 200:
+            print(f"API error: {response.status_code}")
+            return []
+
         data = response.json()
 
         if data.get("status", {}).get("success") == "true":
             return data.get("composers", [])
-        else:
-            return []
+
+        return []
+
+    except requests.exceptions.Timeout:
+        print("Request timed out")
+        return []
 
     except Exception as e:
         print(f"Error searching composers {name}: {e}")
