@@ -1,0 +1,10 @@
+{% if composer %}
+    <h1>{{ composer.name }}</h1>
+
+    <p>Birth Year: {{ composer.birth }}</p>
+    <p>Death Year: {{ composer.death }}</p>
+    <p>Epoch: {{ composer.epoch }}</p>
+    <p>Country: {{ composer.complete_name }}</p>
+{% else %}
+    <p>Composer data unavailable (API issue).</p>
+{% endif %}
