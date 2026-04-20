@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content%}
+
 {% if composer %}
     <h1>{{ composer.name }}</h1>
 
@@ -8,3 +14,5 @@
 {% else %}
     <p>Composer data unavailable (API issue).</p>
 {% endif %}
+
+{% endblock %}

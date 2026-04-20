@@ -1,3 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content%}
+
 <h1>Saxophone Repertoire</h1>
 
 {% for piece in repertoire %}
@@ -8,3 +14,5 @@
         <p>Instrumentation: {{ piece.instrumentation }}</p>
     </div>
 {% endfor %}
+
+{% endblock %}
