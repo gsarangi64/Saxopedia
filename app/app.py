@@ -1,5 +1,5 @@
 #!usr/bin/env python3
-from flask import Flask, render_template, flash, redirect, url_for
+from flask import Flask, render_template, flash, redirect, url_for, request
 from services import load_repertoire, fetch_composer
 
 #start of registration stuff
@@ -53,6 +53,11 @@ class UserForm(FlaskForm):
     pw = PasswordField("Password: ", validators = [DataRequired()])
     submit = SubmitField("Register")
 
+class LoginForm(FlaskForm):
+    uname = StringField("Username: ", validators = [DataRequired()])
+    pw = PasswordField("Password: ", validators = [DataRequired()])
+    submit = SubmitField("Login")
+
     
 def createUser(uname, pw):
     u = User.query.filter_by(uname=uname).first()
@@ -82,6 +87,33 @@ def register():
     
 #end of registration stuff    
 
+#start of login stuff
+from flask_login import login_user, login_required, login_manager, current_user, LoginManager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    
+    if(form.validate_on_submit()):
+        user = User.query.filter_by(uname = form.uname.data).first()
+        if (user is not None and user.verify_password(form.pw.data)):
+            login_user(user)
+            next = request.args.get("next")
+            if next is None or not next.startswith("/"):
+                next = url_for("index")
+            flash("Login Success!")
+            return redirect(next)
+        flash("Invalid username or password")
+    return render_template("login.html", form=form)
+#end of login stuff
+
 
 #routes
 @app.route("/")
@@ -98,7 +130,6 @@ def repertoire():
 def composer(name):
     composer = fetch_composer(name)
     return render_template("composer.html", composer=composer)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
