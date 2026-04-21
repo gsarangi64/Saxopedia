@@ -39,11 +39,22 @@ Saxopedia accesses:
 
 ## Setup Instructions
 ```bash
-# 1. Ensure location is correct
+
+# Clone the repository
+git clone https://github.com/gsarangi64/Saxopedia.git
 cd Saxopedia
 
-# 2. Activate Virtual Environmnet
-venv/Scripts/activate
+# 2. Create Virtual Environmnet
+python -m venv venv
 
-# 3. Run the app
+# 3. Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# 4. Install requirements
+pip install -r requirements.txt
+
+# 5. Run the app
 python app/app.py
