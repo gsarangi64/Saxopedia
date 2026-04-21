@@ -5,13 +5,10 @@ from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_login import login_user, LoginManager
 from services import load_repertoire, fetch_composer
 
-# import from your new files
 from models import db, User, createUser
 from forms import UserForm, LoginForm
 
-# ------------------------
 # App setup
-# ------------------------
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(32)
 
@@ -26,9 +23,7 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# ------------------------
 # Login setup
-# ------------------------
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -37,9 +32,7 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ------------------------
 # Routes
-# ------------------------
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
