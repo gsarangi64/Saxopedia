@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Saxopedia</title>
-    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
 
-            <a href="{{ url_for('index') }}" class="logo">Saxopedia</a>
+            <a href="{{ url_for('index') }}" class="logo">
+                <img class="logo-icon" src="{{ url_for('static', filename='images/SaxopediaAppIcon.png') }}" alt="Saxopedia">
+                <span class="logo-text">Saxopedia</span>
+            </a>
             <div class="nav-links">
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('repertoire') }}">Saxophone Repertoire</a>
-                <a href="{{ url_for('composer', name='Bach') }}">Composer</a>
-                <a href="{{ url_for('register', form='form') }}">Register</a>
-                <a href="{{ url_for('login', form='form') }}">Login</a>
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('repertoire') }}">Saxophone Repertoire</a>
+                <a class="nav-link" href="{{ url_for('composer', name='Bach') }}">Composer</a>
+                <a class="nav-link" href="{{ url_for('register', form='form') }}">Register</a>
+                <a class="nav-link" href="{{ url_for('login', form='form') }}">Login</a>
             </div>
         </div>
     </nav>
@@ -25,8 +28,7 @@
     </div>
 
     <footer class="footer">
-        <p>Saxopedia</p>
-        <p> &copy; 2026 Gaurav Sarangi, Austin Shilling</p>
+        <p>Saxopedia &copy; 2026 Gaurav Sarangi, Austin Shilling</p>
     </footer>
 
 
