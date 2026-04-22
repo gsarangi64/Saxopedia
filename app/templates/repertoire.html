@@ -4,15 +4,17 @@
 
 {% block content%}
 
-<h1>Saxophone Repertoire</h1>
+<div class="page-content">
+    <h1>Saxophone Repertoire</h1>
 
-{% for piece in repertoire %}
-    <div class="piece">
-        <h3>{{ piece.title }}</h3>
-        <p>Composer: {{ piece.composer }}</p>
-        <p>Year: {{ piece.year }}</p>
-        <p>Instrumentation: {{ piece.instrumentation }}</p>
+    {% for piece in repertoire %}
+        <div class="piece">
+            <h3>{{ piece.title }}</h3>
+            <p>Composer: {{ piece.composer }}</p>
+            <p>Year: {{ piece.year }}</p>
+            <p>Instrumentation: {{ piece.instrumentation }}</p>
+        </div>
+    {% endfor %}
     </div>
-{% endfor %}
 
 {% endblock %}

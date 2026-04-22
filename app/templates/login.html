@@ -4,7 +4,7 @@
 
 {% block content%}
 
-<body>
+<div class="page-content">
 	<h1>Login Below</h1>
 	{% for message in get_flashed_messages() %}
 		{{ message }}
@@ -15,7 +15,6 @@
 		{{ form.pw.label }} {{ form.pw() }}
 		{{ form.submit() }}
 	</form>
-</body>
-</html>
+</div>
 
 {% endblock %}

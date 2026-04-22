@@ -1,20 +1,21 @@
-body {
-    background-color: #565D69;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-}
+/* Color Palette:
+Main blue: #4a86e8
+Gray BG: #565D69
+Different Blue: #607CA8
+Yellowy?: #E8B44A
+Brown: #938260
+Dark Brown: #3E3A32
+*/
 
-/* ===== NAVBAR ===== */
+/* NavBar */
 .navbar {
-    position: sticky;
-    top: 0;
+    /* position: sticky; */
+    /* top: 0; */
     background: #4a86e8;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== CONTAINER ===== */
+/* Nav Container */
 .nav-container {
     max-width: 1200px;
     margin: auto;
@@ -24,11 +25,11 @@ body {
     align-items: center;
 }
 
-/* ===== LOGO ===== */
+/* Logo */
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
+    gap: 0.2rem;
     text-decoration: none;
 }
 
@@ -43,22 +44,22 @@ body {
     color: white;
 }
 
-/* ===== NAV LINKS CONTAINER ===== */
+/* NavLinks Container */
 .nav-links {
     display: flex;
     gap: 0.4rem;
     background: rgba(255, 255, 255, 0.15);
     padding: 0.3rem;
-    border-radius: 999px;
+    border-radius: 40px;
     backdrop-filter: blur(6px);
 }
 
-/* ===== LINKS ===== */
+/* Links */
 .nav-link {
     padding: 0.45rem 1.2rem;
-    border-radius: 999px;
+    border-radius: 40px;
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 1.0rem;
     color: white;
     transition: all 0.2s ease;
 }
@@ -75,19 +76,17 @@ body {
     font-weight: 500;
 }
 
-/* Primary (Login) */
-.nav-link.primary {
-    background: white;
+/* .nav-link.primary {
+    background: rgb(239, 19, 19);
     color: #4a86e8;
     font-weight: 600;
-}
+} */
 
-.nav-link.primary:hover {
+/* .nav-link.primary:hover {
     background: #e6efff;
-}
+} */
 
 /* Footer */
-
 .footer {
     text-align: center;
     padding: 0.75rem;
@@ -96,4 +95,23 @@ body {
     background-color: #4a86e8;
     margin-top: auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* General */
+body {
+    background-color: #565D69;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.page-content {
+    flex: auto;
+    margin: 2rem auto;
+    width: 90%;
+    background-color: #607CA8;
+    padding: 1rem;
+    border-radius: 40px;   
+    /* color: #3E3A32; */
 }

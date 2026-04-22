@@ -3,7 +3,7 @@
 {% block title %}Homepage{% endblock %}
 
 {% block content%}
-
+<div class="page-content">
 	<!--Displays flashed message after registering user-->
 	{% with messages = get_flashed_messages(with_categories=true) %}
 	  {% if messages %}
@@ -15,6 +15,6 @@
 	  {% endif %}
 	{% endwith %}
 
-<h1>Saxopedia Homepage</h1>
-
+	<h1>Saxopedia Homepage</h1>
+</div>
 {% endblock %}
