@@ -5,7 +5,7 @@
 {% block content%}
 
 <body>
-	<h1>Register below to create your own playlist!</h1>
+	<h1>Register below to create your own played list!</h1>
 	<form action="{{url_for('register')}}" method = "POST">
 		{{ form.hidden_tag() }}
 		{{ form.uname.label }} {{ form.uname() }}

@@ -2,7 +2,7 @@
 import os
 
 from flask import Flask, render_template, flash, redirect, url_for, request
-from flask_login import login_user, LoginManager
+from flask_login import login_user, LoginManager, current_user, login_required
 from services import load_repertoire, fetch_composer
 
 from models import db, User, createUser
@@ -74,6 +74,12 @@ def login():
         flash("Invalid username or password")
 
     return render_template("login.html", form=form)
+
+
+@app.route("/playedlist")
+@login_required
+def played():
+    return render_template("repstudied.html", current_user=current_user)
 
 
 @app.route("/")
