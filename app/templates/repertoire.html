@@ -14,7 +14,28 @@
             <p>Year: {{ piece.year }}</p>
             <p>Instrumentation: {{ piece.instrumentation }}</p>
         </div>
-    {% endfor %}
+		<button onclick="showPrograms()">Add to Program</button>
+		<!--1) click button, 2) pops up program choices (also form to add new program)-->
+		<div class="hide", id="programList">
+			<p>Click one of the buttons below to add the piece to an existing program or create a new one with the submission box below!</p>
+			<form action="{{url_for('repertoire')}}" method = "POST">
+				{{ form.hidden_tag() }}
+				{{ form.name.label }} {{ form.name() }}
+				{{ form.submit() }}
+			</form>
+			
+		<!--Somehow need to add piece to database of button clicked-->	
+			{% if current_user.programs %}
+				{% for program in current_user.programs %}
+					<button>Add to {{ program.name }}</button>
+				{% endfor %}
+			{% endif %}
+			<button onclick="hidePrograms()">Hide</button>
+		
+		</div>
+	{% endfor %}
     </div>
+	
+	<script src="/static/js/filters.js"></script>
 
 {% endblock %}

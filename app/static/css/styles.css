@@ -115,3 +115,12 @@ body {
     border-radius: 40px;   
     /* color: #3E3A32; */
 }
+
+/*for displaying program list when button clicked*/
+.hide {
+	display: none;
+}
+
+.show {
+	display: block;
+}

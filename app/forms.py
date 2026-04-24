@@ -12,3 +12,7 @@ class LoginForm(FlaskForm):
     uname = StringField("Username: ", validators=[DataRequired()])
     pw = PasswordField("Password: ", validators=[DataRequired()])
     submit = SubmitField("Login")
+
+class ProgramForm(FlaskForm):
+    name = StringField("Name of Program: ", validators=[DataRequired()])
+    submit = SubmitField("Submit")

@@ -5,8 +5,8 @@ from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_login import login_user, LoginManager, current_user, login_required
 from services import load_repertoire, fetch_composer
 
-from models import db, User, createUser
-from forms import UserForm, LoginForm
+from models import db, User, Program, createUser, initializeProgram
+from forms import UserForm, LoginForm, ProgramForm
 
 # App setup
 app = Flask(__name__)
@@ -88,10 +88,20 @@ def index():
     return render_template("index.html", data=data)
 
 
-@app.route("/repertoire")
+@app.route("/repertoire", methods=["GET","POST"])
+@login_required
 def repertoire():
+    form = ProgramForm()
     data = load_repertoire()
-    return render_template("repertoire.html", repertoire=data)
+    
+    if form.validate_on_submit():
+        program = Program.query.filter_by(user_id=current_user.id, name=form.name.data).first()
+        
+        if program is None:
+            initializeProgram(form.name.data)
+            return redirect(url_for('repertoire'))
+    
+    return render_template("repertoire.html", repertoire=data, current_user=current_user, form=form)
 
 
 @app.route("/composer/<name>")
@@ -99,6 +109,9 @@ def composer(name):
     composer = fetch_composer(name)
     return render_template("composer.html", composer=composer)
 
+@app.route("/addpiece", methods=['GET', 'POST'])
+def addpiece():
+    return render_template("addpiece.html")
 
 # Run app
 if __name__ == '__main__':
