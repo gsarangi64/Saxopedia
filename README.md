@@ -85,3 +85,6 @@ python app/app.py
 ```
 
 The app runs at `http://127.0.0.1:5000` by default.
+
+## Work Distribution
+Austin did much with the database entry and forms. Gaurav primarily did things like styling, templates, and js. Both worked equally on overall app structure.
