@@ -1,7 +1,4 @@
----
-CSC 210 Project 2
-Authors: Gaurav Sarangi, Austin Shilling
----
+> CSC 210 Project 2 — Gaurav Sarangi, Austin Shilling
 
 # Saxopedia
 
