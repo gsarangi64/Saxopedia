@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}My Programs{% endblock %}
+
+{% block content %}
+<div class="page-content">
+    <div class="page-header">
+        <h1>My Programs</h1>
+        <p>Create performance programs from pieces in the repertoire.</p>
+    </div>
+
+    <!-- Create new program -->
+    <div class="card">
+        <h2>Create New Program</h2>
+        <form action="{{ url_for('create_program_route') }}" method="POST" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="text" name="name" placeholder="Program name" required>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+
+    <!-- List programs -->
+    {% if programs %}
+        {% for program in programs %}
+            <div class="card program-card">
+                <div class="program-header">
+                    <h2>{{ program.name }}</h2>
+                    <form action="{{ url_for('delete_program', program_id=program.id) }}" method="POST"
+                          onsubmit="return confirm('Delete program {{ program.name }}?')">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete Program</button>
+                    </form>
+                </div>
+
+                {% set pieces = program.pieces.all() %}
+                {% if pieces %}
+                    <table class="piece-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Composer</th>
+                                <th>Year</th>
+                                <th>Instrumentation</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pp in pieces %}
+                                <tr>
+                                    <td>{{ pp.piece_title }}</td>
+                                    <td>{{ pp.composer }}</td>
+                                    <td>{{ pp.year }}</td>
+                                    <td>{{ pp.instrumentation }}</td>
+                                    <td>
+                                        <form action="{{ url_for('remove_from_program', program_id=program.id, piece_id=pp.id) }}"
+                                              method="POST">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="empty-state">No pieces yet — add some from the <a href="{{ url_for('repertoire') }}">Repertoire</a> page.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            <p class="empty-state">No programs yet. Create one above, or head to <a href="{{ url_for('repertoire') }}">Repertoire</a> to start building.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

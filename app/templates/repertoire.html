@@ -2,40 +2,149 @@
 
 {% block title %}Repertoire{% endblock %}
 
-{% block content%}
-
+{% block content %}
 <div class="page-content">
     <h1>Saxophone Repertoire</h1>
 
-    {% for piece in repertoire %}
-        <div class="piece">
-            <h3>{{ piece.title }}</h3>
-            <p>Composer: {{ piece.composer }}</p>
-            <p>Year: {{ piece.year }}</p>
-            <p>Instrumentation: {{ piece.instrumentation }}</p>
-        </div>
-		<button onclick="showPrograms()">Add to Program</button>
-		<!--1) click button, 2) pops up program choices (also form to add new program)-->
-		<div class="hide", id="programList">
-			<p>Click one of the buttons below to add the piece to an existing program or create a new one with the submission box below!</p>
-			<form action="{{url_for('repertoire')}}" method = "POST">
-				{{ form.hidden_tag() }}
-				{{ form.name.label }} {{ form.name() }}
-				{{ form.submit() }}
-			</form>
-			
-		<!--Somehow need to add piece to database of button clicked-->	
-			{% if current_user.programs %}
-				{% for program in current_user.programs %}
-					<button>Add to {{ program.name }}</button>
-				{% endfor %}
-			{% endif %}
-			<button onclick="hidePrograms()">Hide</button>
-		
-		</div>
-	{% endfor %}
-    </div>
-	
-	<script src="/static/js/filters.js"></script>
+    {% if not current_user.is_authenticated %}
+        <p class="auth-notice"><a href="{{ url_for('login') }}">Log in</a> to track pieces and build programs.</p>
+    {% endif %}
 
+    <!-- Filter / Search UI -->
+    <div class="filter-bar">
+        <div class="filter-search-row">
+            <input type="text" id="search-input" class="filter-search"
+                   placeholder="Search by title or composer…" autocomplete="off">
+            <div class="filter-sort">
+                <label for="sort-select">Sort:</label>
+                <select id="sort-select">
+                    <option value="default">Default</option>
+                    <option value="year-asc">Year (oldest first)</option>
+                    <option value="year-desc">Year (newest first)</option>
+                    <option value="title-asc">Title (A–Z)</option>
+                    <option value="composer-asc">Composer (A–Z)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="filter-epoch-row">
+            <span class="filter-label">Epoch:</span>
+            <div id="epoch-filters" class="epoch-buttons">
+                <!-- populated by JS from data attributes -->
+            </div>
+        </div>
+
+        <div class="filter-active-row" id="active-filter-row" style="display:none;">
+            <span class="filter-label">Active:</span>
+            <div id="active-tags"></div>
+            <button class="btn btn-ghost btn-sm" id="clear-all">Clear all</button>
+        </div>
+
+        <p class="filter-count" id="filter-count"></p>
+    </div>
+
+    <!-- Piece list -->
+    <div id="piece-list">
+    {% for piece in repertoire %}
+        {% set piece_id = loop.index %}
+        <div class="piece-card"
+             data-title="{{ piece.title | lower }}"
+             data-composer="{{ piece.composer | lower }}"
+             data-year="{{ piece.year }}"
+             data-epoch="{{ piece.epoch | default('Unknown') | lower }}"
+             data-epoch-display="{{ piece.epoch | default('Unknown') }}">
+
+            <div class="piece-info">
+                <h3>{{ piece.title }}</h3>
+                <p><strong>Composer:</strong> {{ piece.composer }}</p>
+                <p><strong>Year:</strong> {{ piece.year }}</p>
+                <p><strong>Instrumentation:</strong> {{ piece.instrumentation }}</p>
+                <p><strong>Epoch:</strong> {{ piece.epoch | default('Unknown') }}</p>
+            </div>
+
+            {% if current_user.is_authenticated %}
+                <div class="piece-actions">
+
+                    <!-- Mark as Studied -->
+                    {% if piece.title in studied_titles %}
+                        <span class="badge-studied">&#10003; Studied</span>
+                    {% else %}
+                        <button class="btn btn-secondary"
+                                onclick="toggleDropdown('studied-{{ piece_id }}')">
+                            Mark as Studied
+                        </button>
+                        <div id="studied-{{ piece_id }}" class="dropdown-form hide">
+                            <form action="{{ url_for('add_studied') }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="piece_title" value="{{ piece.title }}">
+                                <input type="hidden" name="composer" value="{{ piece.composer }}">
+                                <input type="hidden" name="year" value="{{ piece.year }}">
+                                <input type="hidden" name="instrumentation" value="{{ piece.instrumentation }}">
+                                <label for="notes-{{ piece_id }}">Notes (optional):</label>
+                                <textarea id="notes-{{ piece_id }}" name="notes" rows="2"
+                                          placeholder="Performance notes, date studied, etc."></textarea>
+                                <div class="form-buttons">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" class="btn btn-ghost"
+                                            onclick="toggleDropdown('studied-{{ piece_id }}')">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    <!-- Add to Program -->
+                    {% if programs %}
+                        <button class="btn btn-primary"
+                                onclick="toggleDropdown('prog-{{ piece_id }}')">
+                            + Add to Program
+                        </button>
+                        <div id="prog-{{ piece_id }}" class="dropdown-form hide">
+                            <p class="dropdown-label">Choose a program:</p>
+                            {% for program in programs %}
+                                <form action="{{ url_for('addpiece') }}" method="POST" class="inline-form">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="piece_title" value="{{ piece.title }}">
+                                    <input type="hidden" name="composer" value="{{ piece.composer }}">
+                                    <input type="hidden" name="year" value="{{ piece.year }}">
+                                    <input type="hidden" name="instrumentation" value="{{ piece.instrumentation }}">
+                                    <input type="hidden" name="program_id" value="{{ program.id }}">
+                                    <button type="submit" class="btn btn-outline">{{ program.name }}</button>
+                                </form>
+                            {% endfor %}
+                            <button type="button" class="btn btn-ghost"
+                                    onclick="toggleDropdown('prog-{{ piece_id }}')">Cancel</button>
+                        </div>
+                    {% endif %}
+
+                    <!-- New Program -->
+                    <button class="btn btn-ghost"
+                            onclick="toggleDropdown('newprog-{{ piece_id }}')">
+                        New Program
+                    </button>
+                    <div id="newprog-{{ piece_id }}" class="dropdown-form hide">
+                        <form action="{{ url_for('create_program_route') }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="text" name="name" placeholder="Program name" required>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-ghost"
+                                    onclick="toggleDropdown('newprog-{{ piece_id }}')">Cancel</button>
+                        </form>
+                    </div>
+
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="empty-state">No repertoire data available.</p>
+    {% endfor %}
+    </div>
+
+    <p class="empty-state" id="no-results" style="display:none;">
+        No pieces match your filters.
+        <button class="btn btn-ghost btn-sm" id="clear-all-2">Clear filters</button>
+    </p>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 {% endblock %}

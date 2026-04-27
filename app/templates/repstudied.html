@@ -1,17 +1,64 @@
 {% extends "base.html" %}
 
-{% block title %}Played List{% endblock %}
+{% block title %}Studied List{% endblock %}
 
 {% block content %}
-
 <div class="page-content">
+    <div class="page-header">
+        <h1>{{ current_user.uname }}'s Studied List</h1>
+        <p>Pieces you've worked on and performed.</p>
+    </div>
 
-    <h1>Hello {{ current_user.uname }}!</h1>
-    <p>Click this button to add your newly studied piece!</p>
-    <button>button</button>
-    <p>Or this one to create a program!</p>
-    <button>button</button>
+    {% if studied_pieces %}
+        <table class="piece-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Composer</th>
+                    <th>Year</th>
+                    <th>Instrumentation</th>
+                    <th>Notes</th>
+                    <th>Date Added</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in studied_pieces %}
+                    <tr>
+                        <td>{{ sp.piece_title }}</td>
+                        <td>{{ sp.composer }}</td>
+                        <td>{{ sp.year }}</td>
+                        <td>{{ sp.instrumentation }}</td>
+                        <td>{{ sp.notes if sp.notes else "—" }}</td>
+                        <td>{{ sp.studied_at.strftime('%b %d, %Y') }}</td>
+                        <td>
+                            <form action="{{ url_for('remove_studied', piece_id=sp.id) }}" method="POST">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="card">
+            <p class="empty-state">Nothing here yet. Go to <a href="{{ url_for('repertoire') }}">Repertoire</a> and mark pieces as studied.</p>
+        </div>
+    {% endif %}
 
+    {% if programs %}
+        <div class="card" style="margin-top: 2rem;">
+            <h2>Your Programs</h2>
+            {% for program in programs %}
+                <div class="program-summary">
+                    <strong>{{ program.name }}</strong>
+                    {% set pieces = program.pieces.all() %}
+                    — {{ pieces | length }} piece{{ 's' if pieces | length != 1 else '' }}
+                    <a href="{{ url_for('programs') }}" class="link-small">View</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
-
 {% endblock %}
