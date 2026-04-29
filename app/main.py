@@ -4,15 +4,15 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, logout_user, LoginManager, current_user, login_required
 from flask_wtf.csrf import CSRFProtect
-from services import load_repertoire, fetch_composer
+from app.services import load_repertoire, fetch_composer
 
-from models import (
+from app.models import (
     db, User, Program, ProgramPiece, StudiedPiece,
     create_user, create_program,
     add_piece_to_program, remove_piece_from_program,
     mark_piece_studied, remove_studied_piece
 )
-from forms import UserForm, LoginForm, ProgramForm, AddPieceForm, StudiedPieceForm
+from app.forms import UserForm, LoginForm, ProgramForm, AddPieceForm, StudiedPieceForm
 
 # App setup
 app = Flask(__name__)

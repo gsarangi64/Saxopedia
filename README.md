@@ -81,7 +81,8 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # 5. Run the app
-python app/app.py
+python app/main.py
+python -m main.py
 ```
 
 The app runs at `http://127.0.0.1:5000` by default.
